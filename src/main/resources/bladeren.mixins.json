@@ -5,6 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "top.hendrixshen.magiclib.dependency.impl.MagicMixinPlugin",
   "client": [
+    "accessor.AccessorDataStorage",
+    "minihud.msptSyncProtocol.MixinClientPacketListener",
+    "minihud.msptSyncProtocol.MixinDataStorage"
   ],
   "injectors": {
     "defaultRequire": 1

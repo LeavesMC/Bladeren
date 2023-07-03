@@ -17,13 +17,14 @@ public class Configs {
     @Config(category = ConfigCategory.GENERIC)
     public static boolean debug = false;
 
-    @Hotkey(hotkey = "G,C")
+    @Hotkey(hotkey = "N,C")
     @Config(category = ConfigCategory.GENERIC)
     public static ConfigHotkey openConfigGui;
 
+    // MINIHUD
     @Hotkey
     @Config(category = ConfigCategory.MINIHUD, dependencies = @Dependencies(and = @Dependency(ModInfo.MINIHUD_MOD_ID)))
-    public static boolean renderNextRestockTime = true;
+    public static boolean msptSyncProtocol = true;
 
     public static void init(ConfigManager cm) {
         // GENERIC

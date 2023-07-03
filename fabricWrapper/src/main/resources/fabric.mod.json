@@ -11,7 +11,7 @@
       "contact": {
         "homepage": "https://github.com/LeavesMC"
       }
-    },
+    }
   ],
   "contact": {
     "homepage": "${mod_homepage}",
