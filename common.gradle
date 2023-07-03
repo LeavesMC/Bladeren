@@ -1,0 +1,254 @@
+apply(plugin: "fabric-loom")
+apply(plugin: "io.github.juuxel.loom-quiltflower")
+apply(plugin: "maven-publish")
+apply(plugin: "net.kyori.blossom")
+apply(plugin: "com.replaymod.preprocess")
+
+repositories {
+    mavenLocal()
+
+    maven {
+        name("Curse Maven")
+        url("https://www.cursemaven.com")
+
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+
+    maven {
+        name("Modrinth Maven")
+        url("https://api.modrinth.com/maven")
+
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
+
+    mavenCentral()
+}
+
+int mcVersion = 1
+
+preprocess {
+    mcVersion = vars.get().get("MC")
+    tabIndentation.set(false)
+}
+
+// Module, Property prefix, Resolve condition, Transitive dependencies.
+def apiDependencies = [
+        ["curse.maven:minihud-244260", "minihud", true, false],
+]
+
+// Module, Property prefix, Resolve condition, Transitive dependencies.
+def compileOnlyDependencies = [
+        ["curse.maven:minihud-244260", "minihud", true, false],
+]
+
+dependencies {
+    // Development environment
+    minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    mappings(loom.officialMojangMappings())
+
+    // Annotation processor
+    modCompileOnly("org.projectlombok:lombok:${project.lombok_version}")
+    annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
+
+    // Dependency
+    modImplementation("top.hendrixshen.magiclib:magiclib-${project.minecraft_version.replace(".", "_")}:${project.magiclib_version}") {
+        exclude(group: "carpet", module: "fabric-carpet")
+    }
+
+    // API
+    apiDependencies.forEach { item ->
+        String dependencyNotation = item[0]
+        String propertyPrefix = item[1]
+        boolean shouldResolve = item[2]
+        boolean shouldTransitive = item[3]
+
+        if (shouldResolve) {
+            modApi("${dependencyNotation}:${project.property("${propertyPrefix}_version")}") {
+                transitive(shouldTransitive)
+            }
+        }
+    }
+
+    // Compile only library.
+    compileOnlyDependencies.forEach { item ->
+        String dependencyNotation = item[0]
+        String propertyPrefix = item[1]
+        boolean shouldResolve = item[2]
+        boolean shouldTransitive = item[3]
+
+        if (shouldResolve) {
+            modCompileOnly("${dependencyNotation}:${project.property("${propertyPrefix}_version")}") {
+                transitive(shouldTransitive)
+            }
+        }
+    }
+
+    // Misc
+    runtimeOnly(project(path: ":fabricWrapper"))
+}
+
+group(project.mod_maven_group)
+version(project.parent.version)
+
+base {
+    archivesBaseName("${project.mod_archives_base_name}-${project.minecraft_version}")
+}
+
+loom {
+    interfaceInjection {
+        enableDependencyInterfaceInjection.set(true)
+    }
+
+    runConfigs.configureEach {
+        // Dump modified classes automatically.
+        property("mixin.debug.export", "true")
+    }
+
+    runConfigs.named("client") {
+        programArgs([
+                "--width",
+                "1920",
+                "--height",
+                "1080",
+        ])
+        runDir("run/client")
+    }
+
+    runConfigs.named("server") {
+        runDir("run/server")
+    }
+
+    runs {
+        mixinAuditClient {
+            inherit(client)
+            vmArgs("-Dmagiclib.mixin_audit=true")
+            ideConfigGenerated(false)
+            runDir("run/client")
+        }
+
+        mixinAuditServer {
+            inherit(server)
+            vmArgs("-Dmagiclib.mixin_audit=true")
+            ideConfigGenerated(false)
+            runDir("run/server")
+        }
+    }
+
+    // Setup client default settings.
+    runClient {
+        defaultCharacterEncoding("UTF-8")
+
+        if (!new File("${projectDir}/run/client/options.txt").exists()) {
+            new File("${projectDir}/run/client").mkdirs()
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/client/options.txt"))
+            bufferedWriter.writeLine("autoJump:false")
+            bufferedWriter.writeLine("enableVsync:false")
+            bufferedWriter.writeLine("forceUnicodeFont:true")
+            bufferedWriter.writeLine("fov:1.0")
+            bufferedWriter.writeLine("gamma:16.0")
+            bufferedWriter.writeLine("guiScale:3")
+            bufferedWriter.writeLine("lang:${Locale.getDefault().toString()}")
+            bufferedWriter.writeLine("maxFps:260")
+            bufferedWriter.writeLine("renderDistance:10")
+            bufferedWriter.writeLine("soundCategory_master:0.0")
+            bufferedWriter.close()
+        }
+    }
+
+    // Setup server default settings.
+    runServer {
+        defaultCharacterEncoding("UTF-8")
+
+        // Agree eula before server init.
+        if (!new File("${projectDir}/run/server/eula.txt").exists()) {
+            new File("${projectDir}/run/server").mkdirs()
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/server/eula.txt"))
+            bufferedWriter.writeLine("eula=true")
+            bufferedWriter.close()
+        }
+    }
+}
+
+tasks.findAll {
+    it.name in [
+            "runClient", "runServer",
+            "runMixinAuditClient", "runMixinAuditServer",
+            "preprocessCode", "preprocessResources",
+            "preprocessTestCode", "preprocessTestResources"]
+}.forEach {
+    it.group("${project.mod_id}")
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.setEncoding("UTF-8")
+}
+
+remapJar {
+    remapperIsolation.set(false)
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+
+    from("${rootDir}/icon.png") {
+        into("assets/${project.mod_id}")
+    }
+
+    filesMatching("fabric.mod.json") {
+        filter { line ->
+            line.trim().startsWith("//") ? "" : line
+        }
+
+        expand([
+                "magiclib_dependency" : project.magiclib_dependency,
+                "minecraft_dependency": project.minecraft_dependency,
+                "minecraft_version_id": project.minecraft_version.replace(".", "_"),
+                "minecraft_version"   : project.minecraft_version,
+                "mod_description"     : project.mod_description,
+                "mod_homepage"        : project.mod_homepage,
+                "mod_id"              : project.mod_id,
+                "mod_license"         : project.mod_license,
+                "mod_name"            : project.mod_name,
+                "mod_sources"         : project.mod_sources,
+                "mod_version"         : project.version
+        ])
+    }
+}
+
+blossom {
+    replaceToken("@MOD_IDENTIFIER@", project.mod_id)
+    replaceToken("@MOD_NAME@", project.mod_name)
+    replaceToken("@MINECRAFT_VERSION_IDENTIFY@", project.minecraft_version.replace(".", "_"))
+}
+
+java {
+    sourceCompatibility(JavaVersion.VERSION_1_8)
+    targetCompatibility(JavaVersion.VERSION_1_8)
+    withSourcesJar()
+}
+
+jar {
+    from("${rootDir}/LICENSE")
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId("${project.mod_id}-${project.minecraft_version.replace(".", "_")}")
+            version("${rootProject.getMavenArtifactVersion()}")
+            from(components.java)
+        }
+    }
+
+    repositories {
+        mavenLocal()
+
+        maven {
+            url("$rootDir/publish")
+        }
+    }
+}

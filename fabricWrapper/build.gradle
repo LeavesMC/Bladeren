@@ -1,0 +1,101 @@
+import groovy.json.JsonBuilder
+
+plugins {
+    id("java-library")
+    id("maven-publish")
+}
+
+group(project.mod_maven_group)
+version(project.parent.version)
+
+base {
+    archivesBaseName("${project.mod_archives_base_name}-all")
+}
+
+def fabric_subprojects = project.parent.subprojects.findAll({
+    it.name != "fabricWrapper"
+})
+
+fabric_subprojects.collect {
+    evaluationDependsOn(":${it.name}")
+}
+
+jar {
+    // disable cache
+    outputs.upToDateWhen { false }
+
+    dependsOn(fabric_subprojects.collect {
+        it.tasks.remapJar
+    })
+
+    doFirst {
+        delete fileTree("build/tmp/submods/META-INF/jars")
+
+        copy {
+            from {
+                fabric_subprojects.collect {
+                    it.remapJar.outputs.files
+                }
+            }
+
+            into("build/tmp/submods/META-INF/jars")
+        }
+    }
+
+    from("../LICENSE")
+    from("build/tmp/submods")
+}
+
+processResources {
+    // disable cache
+    outputs.upToDateWhen { false }
+    ArrayList<?> mc_condition = []
+    ArrayList<?> jars = []
+
+    fabric_subprojects.each({
+        mc_condition.add("${it.minecraft_dependency}")
+        jars.add(["file": "META-INF/jars/${project.mod_archives_base_name}-${it.minecraft_version}-${project.version}.jar"])
+    })
+
+    from("${rootDir}/icon.png") {
+        into("assets/${project.mod_id}")
+    }
+
+    filesMatching("fabric.mod.json") {
+        expand([
+                "minecraft_dependency": new JsonBuilder(mc_condition),
+                "magiclib_dependency" : project.magiclib_dependency,
+                "mod_description"     : project.mod_description,
+                "mod_homepage"        : project.mod_homepage,
+                "mod_id"              : project.mod_id,
+                "mod_license"         : project.mod_license,
+                "mod_name"            : project.mod_name,
+                "mod_version"         : project.version,
+                "mod_sources"         : project.mod_sources,
+                "sub_jars"            : new JsonBuilder(jars).toPrettyString(),
+        ])
+    }
+}
+
+java {
+    sourceCompatibility(JavaVersion.VERSION_1_8)
+    targetCompatibility(JavaVersion.VERSION_1_8)
+}
+
+publishing {
+    publications {
+        register("mavenJava", MavenPublication) {
+            artifactId("${project.mod_id}")
+            version("${rootProject.getMavenArtifactVersion()}")
+            from(components.java)
+        }
+    }
+
+    repositories {
+        mavenLocal()
+
+        maven {
+            url("$rootDir/publish")
+        }
+    }
+}

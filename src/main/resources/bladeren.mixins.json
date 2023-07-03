@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "top.leavesmc.Bladeren.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "top.hendrixshen.magiclib.dependency.impl.MagicMixinPlugin",
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

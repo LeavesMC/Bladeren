@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "icon": "assets/${mod_id}/icon.png",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    {
+      "name": "LeavesMC",
+      "contact": {
+        "homepage": "https://github.com/LeavesMC"
+      }
+    },
+  ],
+  "contact": {
+    "homepage": "${mod_homepage}",
+    "issues": "${mod_sources}/issues",
+    "sources": "${mod_sources}"
+  },
+  "license": "${mod_license}",
+  "environment": "client",
+  "entrypoints": {
+    "modmenu": [
+      "top.leavesmc.Bladeren.compat.modmenu.WrapperModMenuApiImpl"
+    ]
+  },
+  "depends": {
+    "magiclib": ">=${magiclib_dependency}",
+    "minecraft": ${minecraft_dependency},
+    "malilib": "*"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
+  },
+  "jars": ${sub_jars}
+}

@@ -1,0 +1,66 @@
+plugins {
+    id("fabric-loom").version("1.3-SNAPSHOT").apply(false)
+    id("io.github.juuxel.loom-quiltflower").version("1.10.0").apply(false)
+    id("net.kyori.blossom").version("1.3.1").apply(false)
+    id("org.ajoberstar.grgit").version("5.2.0")
+    id("maven-publish")
+    id("com.replaymod.preprocess").version("SNAPSHOT")
+}
+
+preprocess {
+    def mc1201 = createNode("1.20.1", 1_20_01, "mojang") // root
+}
+
+ext {
+    def environmentMap = System.getenv()
+
+    getVersionGit = { List paths ->
+        if (grgit == null) {
+            return "nogit"
+        }
+
+        List latestCommits = paths.isEmpty() ? grgit.log(maxCommits: 1) : grgit.log(paths: paths, maxCommits: 1)
+        return latestCommits.isEmpty() ? "uncommited" : "${latestCommits.get(0).id.substring(0, 7)}"
+    }
+
+    getBuildNumber = {
+        return environmentMap.GITHUB_RUN_NUMBER ? environmentMap.GITHUB_RUN_NUMBER : Integer.MAX_VALUE
+    }
+
+    getVersionType = {
+        switch (environmentMap.BUILD_TYPE) {
+            case "RELEASE":
+                return "stable"
+            case "BETA":
+                return "beta"
+            default:
+                return "dev"
+        }
+    }
+
+    getVersionPatch = { List paths ->
+        if (grgit == null) {
+            return 0
+        }
+
+        List latestCommits = paths.isEmpty() ? grgit.log() : grgit.log(paths: paths)
+        return latestCommits.size()
+    }
+
+    getMavenArtifactVersion = {
+        return ext.getVersionType() == "stable" ? "${project.mod_version}.${ext.getVersionPatch([])}" : project.version
+    }
+}
+
+setVersion("${project.mod_version}.${project.getVersionPatch([])}+${project.getVersionGit([])}-${project.getVersionType()}")
+
+tasks.register("cleanPreprocessSources") {
+    it.group("${project.mod_id}")
+
+    doFirst {
+        subprojects {
+            def path = project.projectDir.toPath().resolve("build/preprocessed")
+            path.toFile().deleteDir()
+        }
+    }
+}
