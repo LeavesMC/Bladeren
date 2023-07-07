@@ -28,7 +28,7 @@ jobs:
       - name: preprocessResources
         env:
           BUILD_TYPE: "BETA"
-        run: ./gradlew preprocessResources
+        run: ./gradlew processResources
       - name: build
         env:
           BUILD_TYPE: "BETA"
