@@ -6,6 +6,7 @@ import top.hendrixshen.magiclib.dependency.api.annotation.Dependency;
 import top.hendrixshen.magiclib.malilib.impl.ConfigHandler;
 import top.hendrixshen.magiclib.malilib.impl.ConfigManager;
 import top.leavesmc.Bladeren.config.Configs;
+import top.leavesmc.Bladeren.leaves.LeavesProtocol;
 
 public class BladerenMod implements ClientModInitializer {
     private static final int CONFIG_VERSION = 1;
@@ -20,5 +21,7 @@ public class BladerenMod implements ClientModInitializer {
         ModInfo.configHandler = new ConfigHandler(ModInfo.MOD_ID, cm, CONFIG_VERSION);
         ConfigHandler.register(ModInfo.configHandler);
         Configs.init(cm);
+
+        LeavesProtocol.init();
     }
 }

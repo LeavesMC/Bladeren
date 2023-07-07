@@ -1,0 +1,14 @@
+{
+  "bladeren.gui.title.configs": "Bladeren Config - Version: %s",
+  "bladeren.gui.button.tab.generic": "Generic",
+  "bladeren.gui.button.tab.minecraft": "Minecraft",
+  "bladeren.gui.button.tab.minihud": "Minihud",
+  "bladeren.config.generic.debug.name": "debug",
+  "bladeren.config.generic.debug.comment": "Display debug message",
+  "bladeren.config.generic.openConfigGui.name": "openConfigGui",
+  "bladeren.config.generic.openConfigGui.comment": "A hotkey to open the in-game Config GUI",
+  "bladeren.config.minihud.msptSyncProtocol.name": "msptSyncProtocol",
+  "bladeren.config.minihud.msptSyncProtocol.comment": "Use Bladeren to sync mspt data from Leaves",
+  "bladeren.config.minecraft.lavaRiptide.name": "lavaRiptide",
+  "bladeren.config.minecraft.lavaRiptide.comment": "Make riptide can use on lava,\nin server maybe is hacker"
+}

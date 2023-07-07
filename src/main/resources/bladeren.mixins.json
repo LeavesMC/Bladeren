@@ -6,6 +6,8 @@
   "plugin": "top.hendrixshen.magiclib.dependency.impl.MagicMixinPlugin",
   "client": [
     "accessor.AccessorDataStorage",
+    "event.disconnect.MixinMinecraftClient",
+    "minecraft.lavaRiptide.MixinTridentItem",
     "minihud.msptSyncProtocol.MixinClientPacketListener",
     "minihud.msptSyncProtocol.MixinDataStorage"
   ],

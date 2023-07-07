@@ -1,11 +1,14 @@
 {
   "bladeren.gui.title.configs": "Bladeren 设置 - 版本: %s",
   "bladeren.gui.button.tab.generic": "通用",
+  "bladeren.gui.button.tab.minecraft": "Minecraft",
   "bladeren.gui.button.tab.minihud": "Minihud",
   "bladeren.config.generic.debug.name": "调试模式",
   "bladeren.config.generic.debug.comment": "开启后将会打印调试日志",
   "bladeren.config.generic.openConfigGui.name": "打开设置界面",
   "bladeren.config.generic.openConfigGui.comment": "打开设置界面的快捷键",
   "bladeren.config.minihud.msptSyncProtocol.name": "MSPT数据同步",
-  "bladeren.config.minihud.msptSyncProtocol.comment": "使用 Bladeren 协议和 Leaves 服务器同步MSPT数据"
+  "bladeren.config.minihud.msptSyncProtocol.comment": "使用 Bladeren 协议和 Leaves 服务器同步MSPT数据",
+  "bladeren.config.minecraft.lavaRiptide.name": "熔岩激流",
+  "bladeren.config.minecraft.lavaRiptide.comment": "使得激流可以在岩浆中使用，\n这会被大多数服务器视为作弊且服务器可禁用此功能"
 }
