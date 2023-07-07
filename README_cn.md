@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/LeavesMC/Bladeren?style=flat-square)](https://github.com/LeavesMC/Bladeren/blob/master/LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/LeavesMC/Bladeren/build.yml?label=Build&style=flat-square)](https://github.com/LeavesMC/Bladeren/actions/workflows/build.yml)
 
-[English](./READEM.md) | **中文**
+[English](./README.md) | **中文**
 
 ❗在报告问题前请务必尝试最新 [测试版](https://github.com/LeavesMC/Bladeren/actions) ，在确定问题依然存在后再进行报告。
 
