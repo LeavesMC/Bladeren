@@ -5,9 +5,9 @@
 
 **English** | [中文](./README_cn.md)
 
-❗Before reporting a problem, be sure to try the latest [beta version](https://github.com/LeavesMC/Bladeren/actions) to check if the problem still exists.
+❗Before reporting a problem, be sure to try the latest [beta version](https://github.com/LeavesMC/Bladeren/actions) of Bladeren to check if the problem still exists.
 
-Add some features and support Leaves extra protocol.
+Adds some features and supports Leaves extra protocol.
 
 The default hotkey to open the in-game config GUI is **N + C**.
 
@@ -23,4 +23,4 @@ The default hotkey to open the in-game config GUI is **N + C**.
 
 ## Thanks
 
-Thanks for [Magiclib](https://github.com/Hendrix-Shen/Magiclib).
+Thanks [Magiclib](https://github.com/Hendrix-Shen/Magiclib).
