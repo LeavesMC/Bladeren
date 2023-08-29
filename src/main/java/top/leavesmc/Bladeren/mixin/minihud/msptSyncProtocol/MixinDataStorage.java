@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.hendrixshen.magiclib.dependency.api.annotation.Dependencies;
 import top.hendrixshen.magiclib.dependency.api.annotation.Dependency;
 import top.leavesmc.Bladeren.ModInfo;
-import top.leavesmc.Bladeren.config.Configs;
 import top.leavesmc.Bladeren.minihud.msptSyncProtocol.MsptSyncProtocol;
 
 @Dependencies(and = @Dependency(ModInfo.MINIHUD_MOD_ID))
@@ -16,8 +15,6 @@ import top.leavesmc.Bladeren.minihud.msptSyncProtocol.MsptSyncProtocol;
 public class MixinDataStorage {
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void onInit(CallbackInfo ci) {
-        if (Configs.msptSyncProtocol) {
-            MsptSyncProtocol.init();
-        }
+        MsptSyncProtocol.init();
     }
 }

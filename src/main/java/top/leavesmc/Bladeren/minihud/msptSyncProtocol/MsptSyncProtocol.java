@@ -1,46 +1,49 @@
 package top.leavesmc.Bladeren.minihud.msptSyncProtocol;
 
 import fi.dy.masa.minihud.util.DataStorage;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import top.leavesmc.Bladeren.ModInfo;
 import top.leavesmc.Bladeren.config.Configs;
+import top.leavesmc.Bladeren.leaves.LeavesProtocol;
 import top.leavesmc.Bladeren.mixin.accessor.AccessorDataStorage;
 
 public class MsptSyncProtocol {
 
-    private static final ResourceLocation MSPT_SYNC_ENABLE = ModInfo.id("mspt_sync_enable");
     private static final ResourceLocation MSPT_SYNC = ModInfo.id("mspt_sync");
 
     private static AccessorDataStorage dataStorage;
 
-    private static boolean sendEnable = false;
-
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(MSPT_SYNC, MsptSyncProtocol::updateMspt);
-        ClientPlayNetworking.registerGlobalReceiver(MSPT_SYNC_ENABLE, MsptSyncProtocol::enableMsptSync);
+        LeavesProtocol.registerDataHandler(MSPT_SYNC, MsptSyncProtocol::updateMspt);
+        LeavesProtocol.registerFeatureHandler("mspt_sync", MsptSyncProtocol::enableSync);
     }
 
-    private static void enableMsptSync(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
-        if (Configs.msptSyncProtocol) {
+    private static void enableSync(LocalPlayer player, CompoundTag tag) {
+        if (tag.getString("Value").equals("true")) {
             dataStorage = (AccessorDataStorage) DataStorage.getInstance();
-            sendEnable = true;
+            CompoundTag data = new CompoundTag();
+            data.putString("Value", Boolean.toString(Configs.msptSyncProtocol));
+            LeavesProtocol.addFeatureBackData("mspt_sync", data);
         }
     }
 
-    public static void onPlayerJoin() {
-        if (sendEnable) {
-            ClientPlayNetworking.send(MSPT_SYNC_ENABLE, new FriendlyByteBuf(Unpooled.buffer()));
-            sendEnable = false;
+    public static void modifyStatus() {
+        CompoundTag data = new CompoundTag();
+        data.putString("Value", Boolean.toString(Configs.msptSyncProtocol));
+        LeavesProtocol.sendFeatureModify("mspt_sync", data);
+
+        if (!Configs.msptSyncProtocol) {
+            dataStorage.setServerTPSValid(false);
+            dataStorage.setCarpetServer(false);
+        } else {
+            dataStorage = (AccessorDataStorage) DataStorage.getInstance();
         }
     }
 
-    private static void updateMspt(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
+    private static void updateMspt(LocalPlayer player, FriendlyByteBuf buf) {
         if (Configs.msptSyncProtocol) {
             dataStorage.setServerMSPT(buf.readDouble());
             dataStorage.setServerTPS(buf.readDouble());

@@ -8,7 +8,7 @@
     "accessor.AccessorDataStorage",
     "event.disconnect.MixinMinecraftClient",
     "minecraft.lavaRiptide.MixinTridentItem",
-    "minihud.msptSyncProtocol.MixinClientPacketListener",
+    "leaves.MixinClientPacketListener",
     "minihud.msptSyncProtocol.MixinDataStorage"
   ],
   "injectors": {

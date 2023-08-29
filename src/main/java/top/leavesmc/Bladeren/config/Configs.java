@@ -11,6 +11,7 @@ import top.hendrixshen.magiclib.malilib.api.annotation.Hotkey;
 import top.hendrixshen.magiclib.malilib.impl.ConfigManager;
 import top.leavesmc.Bladeren.ModInfo;
 import top.leavesmc.Bladeren.gui.GuiConfigs;
+import top.leavesmc.Bladeren.minihud.msptSyncProtocol.MsptSyncProtocol;
 
 public class Configs {
     // GENERIC
@@ -51,6 +52,11 @@ public class Configs {
             screen.setParent(Minecraft.getInstance().screen);
             Minecraft.getInstance().setScreen(screen);
             return true;
+        });
+
+        // MINIHUD
+        cm.setValueChangeCallback("msptSyncProtocol", option -> {
+            MsptSyncProtocol.modifyStatus();
         });
     }
 
