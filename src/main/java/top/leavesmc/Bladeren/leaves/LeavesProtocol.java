@@ -1,6 +1,7 @@
 package top.leavesmc.Bladeren.leaves;
 
 import io.netty.buffer.Unpooled;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import top.leavesmc.Bladeren.ModInfo;
 import top.leavesmc.Bladeren.event.DisconnectEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -23,8 +26,11 @@ public class LeavesProtocol {
     private static final Map<String, BiConsumer<LocalPlayer, CompoundTag>> featureHandlers = new HashMap<>();
     private static final Map<String, CompoundTag> featureBackData = new HashMap<>();
     private static final Map<String, String> featureData = new HashMap<>();
+    private static final List<Runnable> helloEndTasks = new ArrayList<>();
 
-    private static LocalPlayer localPlayer;
+    private static LocalPlayer localPlayer = null;
+    @Getter
+    private static boolean isLeavesServer = false;
 
     public static void init() {
         DisconnectEvent.register(LeavesProtocol::onDisconnect);
@@ -34,6 +40,8 @@ public class LeavesProtocol {
     public static void handleHello(LocalPlayer player, FriendlyByteBuf data) {
         String serverVersion = data.readUtf(64);
         CompoundTag tag = data.readNbt();
+
+        isLeavesServer = true;
 
         if (tag != null) {
             CompoundTag featureNbt = tag.getCompound("Features");
@@ -60,6 +68,8 @@ public class LeavesProtocol {
 
         backData.writeNbt(backTag);
 
+        helloEndTasks.forEach(Runnable::run);
+
         sendPacket(HELLO_ID, backData);
     }
 
@@ -73,8 +83,12 @@ public class LeavesProtocol {
         return featureData.getOrDefault(name, "null");
     }
 
+    public static boolean isFeatureEnableOrLocal(String name) {
+        return Minecraft.getInstance().isLocalServer() || isFeatureEnable(name);
+    }
+
     public static boolean isFeatureEnable(String name) {
-        return Minecraft.getInstance().isLocalServer() || featureData.getOrDefault(name, "false").equals("true");
+        return isLeavesServer && featureData.getOrDefault(name, "false").equals("true");
     }
 
     public static void registerDataHandler(ResourceLocation id, BiConsumer<LocalPlayer, FriendlyByteBuf> handler) {
@@ -83,6 +97,10 @@ public class LeavesProtocol {
 
     public static void registerFeatureHandler(String id, BiConsumer<LocalPlayer, CompoundTag> handler) {
         featureHandlers.put(id, handler);
+    }
+
+    public static void registerHelloEndTask(Runnable task) {
+        helloEndTasks.add(task);
     }
 
     public static void addFeatureBackData(String id, CompoundTag tag) {
@@ -107,6 +125,7 @@ public class LeavesProtocol {
 
     private static void onDisconnect() {
         localPlayer = null;
+        isLeavesServer = false;
         featureData.clear();
     }
 }

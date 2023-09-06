@@ -6,9 +6,13 @@
   "plugin": "top.hendrixshen.magiclib.dependency.impl.MagicMixinPlugin",
   "client": [
     "accessor.AccessorDataStorage",
+    "clientcommands.MixinClientsCommands",
+    "clientcommands.disableNotVanillaWarn.MixinServerBrandManager",
+    "clientcommands.fishCommand.MixinConfigs",
+    "clientcommands.fishCommand.MixinFishCommand",
     "event.disconnect.MixinMinecraftClient",
-    "minecraft.lavaRiptide.MixinTridentItem",
     "leaves.MixinClientPacketListener",
+    "minecraft.lavaRiptide.MixinTridentItem",
     "minihud.msptSyncProtocol.MixinDataStorage"
   ],
   "injectors": {

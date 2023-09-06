@@ -23,14 +23,17 @@ public class Configs {
     public static ConfigHotkey openConfigGui;
 
     // MINECRAFT
-    @Hotkey
     @Config(category = ConfigCategory.MINECRAFT)
     public static boolean lavaRiptide = false;
 
     // MINIHUD
-    @Hotkey
     @Config(category = ConfigCategory.MINIHUD, dependencies = @Dependencies(and = @Dependency(ModInfo.MINIHUD_MOD_ID)))
     public static boolean msptSyncProtocol = true;
+
+    @Config(category = ConfigCategory.CLIENTCOMMANDS, dependencies = @Dependencies(and = @Dependency(ModInfo.CLIENTCOMMANDS_MOD_ID)))
+    public static boolean fishCommand = true;
+    @Config(category = ConfigCategory.CLIENTCOMMANDS, dependencies = @Dependencies(and = @Dependency(ModInfo.CLIENTCOMMANDS_MOD_ID)))
+    public static boolean disableNotVanillaWarn = true;
 
     public static void init(ConfigManager cm) {
         // GENERIC
@@ -64,5 +67,6 @@ public class Configs {
         public static final String GENERIC = "generic";
         public static final String MINECRAFT = "minecraft";
         public static final String MINIHUD = "minihud";
+        public static final String CLIENTCOMMANDS = "clientcommands";
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class ModInfo {
     public static final String MINIHUD_MOD_ID = "minihud";
+    public static final String CLIENTCOMMANDS_MOD_ID = "clientcommands";
     public static String MOD_ID = "@MOD_IDENTIFIER@";
     public static final String CURRENT_MOD_ID = "@MOD_IDENTIFIER@-@MINECRAFT_VERSION_IDENTIFY@";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(CURRENT_MOD_ID).orElseThrow(RuntimeException::new).getMetadata().getName();

@@ -38,11 +38,15 @@ preprocess {
 // Module, Property prefix, Resolve condition, Transitive dependencies.
 def apiDependencies = [
         ["curse.maven:minihud-244260", "minihud", true, false],
+        ["curse.maven:litematica-308892", "litematica", true, false],
+        ["maven.modrinth:client-commands", "clientcommands", true, true],
 ]
 
 // Module, Property prefix, Resolve condition, Transitive dependencies.
 def compileOnlyDependencies = [
         ["curse.maven:minihud-244260", "minihud", true, false],
+        ["curse.maven:litematica-308892", "litematica", true, false],
+        ["maven.modrinth:client-commands", "clientcommands", true, true],
 ]
 
 dependencies {

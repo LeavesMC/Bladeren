@@ -12,7 +12,8 @@ public class BladerenMod implements ClientModInitializer {
     private static final int CONFIG_VERSION = 1;
 
     @Dependencies(and = {
-            @Dependency(value = "minihud", versionPredicate = ">=0.22.0", optional = true),
+            @Dependency(value = ModInfo.MINIHUD_MOD_ID, versionPredicate = ">=0.22.0", optional = true),
+            @Dependency(value = ModInfo.CLIENTCOMMANDS_MOD_ID, versionPredicate = ">=2.8.2", optional = true),
     })
     @Override
     public void onInitializeClient() {

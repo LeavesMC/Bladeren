@@ -12,13 +12,14 @@ import top.leavesmc.Bladeren.mixin.accessor.AccessorDataStorage;
 
 public class MsptSyncProtocol {
 
-    private static final ResourceLocation MSPT_SYNC = ModInfo.id("mspt_sync");
+    private static final String MSPT_SYNC_NAME = "mspt_sync";
+    private static final ResourceLocation MSPT_SYNC = ModInfo.id(MSPT_SYNC_NAME);
 
     private static AccessorDataStorage dataStorage;
 
     public static void init() {
         LeavesProtocol.registerDataHandler(MSPT_SYNC, MsptSyncProtocol::updateMspt);
-        LeavesProtocol.registerFeatureHandler("mspt_sync", MsptSyncProtocol::enableSync);
+        LeavesProtocol.registerFeatureHandler(MSPT_SYNC_NAME, MsptSyncProtocol::enableSync);
     }
 
     private static void enableSync(LocalPlayer player, CompoundTag tag) {
@@ -26,14 +27,14 @@ public class MsptSyncProtocol {
             dataStorage = (AccessorDataStorage) DataStorage.getInstance();
             CompoundTag data = new CompoundTag();
             data.putString("Value", Boolean.toString(Configs.msptSyncProtocol));
-            LeavesProtocol.addFeatureBackData("mspt_sync", data);
+            LeavesProtocol.addFeatureBackData(MSPT_SYNC_NAME, data);
         }
     }
 
     public static void modifyStatus() {
         CompoundTag data = new CompoundTag();
         data.putString("Value", Boolean.toString(Configs.msptSyncProtocol));
-        LeavesProtocol.sendFeatureModify("mspt_sync", data);
+        LeavesProtocol.sendFeatureModify(MSPT_SYNC_NAME, data);
 
         if (!Configs.msptSyncProtocol) {
             dataStorage.setServerTPSValid(false);

@@ -13,11 +13,11 @@ public class MixinTridentItem {
 
     @Redirect(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isInWaterOrRain()Z"))
     private boolean isInWaterOrLave(Player player) {
-        return player.isInWaterOrRain() || (Configs.lavaRiptide && LeavesProtocol.isFeatureEnable("lava_riptide") && player.isInLava());
+        return player.isInWaterOrRain() || (Configs.lavaRiptide && LeavesProtocol.isFeatureEnableOrLocal("lava_riptide") && player.isInLava());
     }
 
     @Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isInWaterOrRain()Z"))
     private boolean checkInWaterOrLave(Player player) {
-        return player.isInWaterOrRain() || (Configs.lavaRiptide && LeavesProtocol.isFeatureEnable("lava_riptide") && player.isInLava());
+        return player.isInWaterOrRain() || (Configs.lavaRiptide && LeavesProtocol.isFeatureEnableOrLocal("lava_riptide") && player.isInLava());
     }
 }
