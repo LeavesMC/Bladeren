@@ -10,7 +10,7 @@ import top.leavesmc.Bladeren.event.DisconnectEvent;
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraftClient {
 
-    @Inject(method = "clearLevel(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At(value = "HEAD"))
+    @Inject(method = "clearClientLevel", at = @At(value = "HEAD"))
     private void onDisconnect(CallbackInfo ci) {
         if (!Minecraft.getInstance().hasSingleplayerServer()) {
             DisconnectEvent.onDisconnect();

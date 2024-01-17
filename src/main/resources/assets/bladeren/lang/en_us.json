@@ -3,6 +3,7 @@
   "bladeren.gui.button.tab.generic": "Generic",
   "bladeren.gui.button.tab.minecraft": "Minecraft",
   "bladeren.gui.button.tab.minihud": "Minihud",
+  "bladeren.gui.button.tab.clientcommands": "clientcommands",
   "bladeren.config.generic.debug.name": "debug",
   "bladeren.config.generic.debug.comment": "Display debug message",
   "bladeren.config.generic.openConfigGui.name": "openConfigGui",

@@ -3,6 +3,7 @@
   "bladeren.gui.button.tab.generic": "通用",
   "bladeren.gui.button.tab.minecraft": "Minecraft",
   "bladeren.gui.button.tab.minihud": "Minihud",
+  "bladeren.gui.button.tab.clientcommands": "clientcommands",
   "bladeren.config.generic.debug.name": "调试模式",
   "bladeren.config.generic.debug.comment": "开启后将会打印调试日志",
   "bladeren.config.generic.openConfigGui.name": "打开设置界面",

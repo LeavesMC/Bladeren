@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
 import top.leavesmc.Bladeren.ModInfo;
 import top.leavesmc.Bladeren.event.DisconnectEvent;
@@ -73,9 +73,9 @@ public class LeavesProtocol {
         sendPacket(HELLO_ID, backData);
     }
 
-    public static void onPayload(ResourceLocation id, FriendlyByteBuf data) {
-        if (dataHandlers.containsKey(id)) {
-            dataHandlers.get(id).accept(localPlayer, data);
+    public static void onPayload(LeavesPayload payload) {
+        if (dataHandlers.containsKey(payload.id())) {
+            dataHandlers.get(payload.id()).accept(localPlayer, payload.byteBuf());
         }
     }
 
@@ -112,7 +112,7 @@ public class LeavesProtocol {
     }
 
     public static void sendPacket(ResourceLocation id, FriendlyByteBuf data) {
-        localPlayer.connection.send(new ServerboundCustomPayloadPacket(id, data));
+        localPlayer.connection.send(new ServerboundCustomPayloadPacket(new LeavesPayload(id, data)));
     }
 
     public static void sendFeatureModify(String name, CompoundTag tag) {

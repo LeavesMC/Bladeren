@@ -45,7 +45,6 @@ public class Configs {
             }
             GuiConfigs.getInstance().reDraw();
         });
-
         if (debug) {
             Configurator.setLevel(ModInfo.MOD_ID, Level.toLevel("DEBUG"));
         }
