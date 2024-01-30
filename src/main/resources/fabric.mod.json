@@ -1,46 +1,46 @@
 {
-  "schemaVersion": 1,
-  "id": "${mod_id}-${minecraft_version_id}",
-  "version": "${mod_version}",
-  "icon": "assets/${mod_id}/icon.png",
-  "name": "${mod_name} for ${minecraft_version}",
-  "description": "${mod_description}",
-  "authors": [
-    {
-      "name": "LeavesMC",
-      "contact": {
-        "homepage": "https://github.com/LeavesMC"
-      }
-    }
-  ],
-  "contact": {
-    "homepage": "${mod_homepage}",
-    "issues": "${mod_sources}/issues",
-    "sources": "${mod_sources}"
-  },
-  "license": "${mod_license}",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "top.leavesmc.Bladeren.BladerenMod"
+    "schemaVersion": 1,
+    "id": "${mod_id}-${minecraft_version_id}",
+    "version": "${mod_version}",
+    "icon": "assets/${mod_id}/icon.png",
+    "name": "${mod_name} for ${minecraft_version}",
+    "description": "${mod_description}",
+    "authors": [
+        {
+            "name": "LeavesMC",
+            "contact": {
+                "homepage": "https://github.com/LeavesMC"
+            }
+        }
     ],
-    "modmenu": [
-      "top.leavesmc.Bladeren.compat.modmenu.ModMenuApiImpl"
-    ]
-  },
-  "mixins": [
-    "${mod_id}.mixins.json"
-  ],
-  "depends": {
-    "magiclib-${minecraft_version_id}": ">=${magiclib_dependency}",
-    "malilib": "*",
-    "minecraft": "${minecraft_dependency}"
-  },
-  "custom": {
-    "modmenu:clientsideOnly": true,
-    "modmenu:parent": "${mod_id}",
-    "modmenu": {
-      "parent": "${mod_id}"
+    "contact": {
+        "homepage": "${mod_homepage}",
+        "issues": "${mod_sources}/issues",
+        "sources": "${mod_sources}"
+    },
+    "license": "${mod_license}",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "top.leavesmc.Bladeren.BladerenMod"
+        ],
+        "modmenu": [
+            "top.leavesmc.Bladeren.compat.modmenu.ModMenuApiImpl"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json"
+    ],
+    "depends": {
+        "magiclib-${minecraft_version_id}": ">=${magiclib_dependency}",
+        "malilib": "*",
+        "minecraft": "${minecraft_dependency}"
+    },
+    "custom": {
+        "modmenu:clientsideOnly": true,
+        "modmenu:parent": "${mod_id}",
+        "modmenu": {
+            "parent": "${mod_id}"
+        }
     }
-  }
 }

@@ -16,7 +16,6 @@ import top.leavesmc.Bladeren.ModInfo;
 import top.leavesmc.Bladeren.clientcommands.RandomManager;
 import top.leavesmc.Bladeren.config.Configs;
 
-
 @Dependencies(and = @Dependency(ModInfo.CLIENTCOMMANDS_MOD_ID))
 @Mixin(FishCommand.class)
 public class MixinFishCommand {

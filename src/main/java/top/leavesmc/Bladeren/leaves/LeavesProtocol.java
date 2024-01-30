@@ -48,9 +48,8 @@ public class LeavesProtocol {
             for (String name : featureNbt.getAllKeys()) {
                 if (featureHandlers.containsKey(name)) {
                     featureHandlers.get(name).accept(localPlayer, featureNbt.getCompound(name));
-                } else {
-                    featureData.put(name, featureNbt.getCompound(name).getString("Value"));
                 }
+                featureData.put(name, featureNbt.getCompound(name).getString("Value"));
             }
         }
 
